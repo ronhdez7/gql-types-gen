@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { OptionFlags } from "./types";
 import * as path from "path";
 import { generateSchema } from "./lib";
