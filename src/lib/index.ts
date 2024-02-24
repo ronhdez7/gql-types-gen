@@ -29,7 +29,7 @@ export async function generateSchema(
   let contents = "";
 
   // include imports
-  contents += `import { __Schema, __Directive, __DirectiveLocation, __EnumValue, __Field, __InputValue, __Type, __TypeKind } from "../types/schema";\n\n`;
+  contents += `import { __Schema, __Directive, __DirectiveLocation, __EnumValue, __Field, __InputValue, __Type, __TypeKind } from "gql-types-gen";\n\n`;
 
   const output = generate(schema);
   contents += output.types;
