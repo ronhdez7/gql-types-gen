@@ -27,12 +27,14 @@ export type IntrospectionResponse = GraphqlResponse<{ __schema: __Schema }>;
 export type OptionFlags = {
   schema: string;
   output: string;
-  header?: string[];
   types?: boolean;
+  header?: string[];
+  scalar?: string[];
 };
 
-export type HeadersConfig = Record<string, string>;
+export type CustomConfig = Record<string, string>;
 export interface GenerationConfig {
   onlyTypes?: boolean;
-  headers?: HeadersConfig;
+  headers?: CustomConfig;
+  scalars?: CustomConfig;
 }

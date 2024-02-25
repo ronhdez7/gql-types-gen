@@ -1,7 +1,7 @@
 import * as path from "path";
 import * as fs from "fs";
 import { Command } from "commander";
-import { HeadersConfig } from "../types";
+import { CustomConfig } from "../types";
 
 export const program = new Command();
 
@@ -26,15 +26,15 @@ export function writeToFile(outputPath: string, content: string) {
   fs.writeFileSync(outputPath, content);
 }
 
-export function parseHeaders(headers: string[]): HeadersConfig {
-  const parsedHeaders: HeadersConfig = {};
-  for (const header of headers) {
-    const [name, value] = header.split(":");
-    if (name === undefined || value === undefined) continue;
-    parsedHeaders[name.trim()] = value.trim();
+export function parseCustomOptions(options: string[]): CustomConfig {
+  const parsedOptions: CustomConfig = {};
+  for (const option of options) {
+    const [name, ...value] = option.split(":");
+    if (name === undefined) continue;
+    parsedOptions[name.trim()] = value.join(":").trim();
   }
 
-  return parsedHeaders;
+  return parsedOptions;
 }
 
 export const GET_SCHEMA_QUERY = `fragment FullType on __Type {

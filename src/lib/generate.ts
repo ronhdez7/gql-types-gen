@@ -1,3 +1,4 @@
+import { CustomConfig } from "../types";
 import {
   __EnumValue,
   __Field,
@@ -9,8 +10,11 @@ import {
 import { Scalar, Union } from "../types/type-kinds";
 import { requiredObject, requiredType } from "./utils";
 
-export function generate(schema: __Schema): GenerationOutput {
-  return new Generator(schema).generate();
+export function generate(
+  schema: __Schema,
+  customScalars: CustomConfig = {}
+): GenerationOutput {
+  return new Generator(schema, customScalars).generate();
 }
 
 type GenerationOutput = {
@@ -39,7 +43,10 @@ class Generator {
     Float: "number",
   } as Record<string, string>;
 
-  constructor(private readonly schema: __Schema) {}
+  constructor(
+    private readonly schema: __Schema,
+    private readonly customScalars: CustomConfig = {}
+  ) {}
 
   generate(): GenerationOutput {
     this.objects += "export const schema = {\n";
@@ -151,7 +158,9 @@ class Generator {
   }
 
   handleScalar(type: Scalar) {
-    return this.BUILTIN_SCALARS[type.name] ?? "any";
+    return (
+      this.customScalars[type.name] ?? this.BUILTIN_SCALARS[type.name] ?? "any"
+    );
   }
 
   handleFields(fields: (__Field | __InputValue)[]): GenerationOutput {

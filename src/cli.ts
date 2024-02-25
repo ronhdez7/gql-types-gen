@@ -3,7 +3,7 @@
 import { OptionFlags } from "./types";
 import * as path from "path";
 import { generateSchema } from "./lib";
-import { parseHeaders, program } from "./lib/utils";
+import { parseCustomOptions, program } from "./lib/utils";
 
 function defineProgram() {
   program
@@ -30,6 +30,13 @@ function defineProgram() {
   }
   program.option("-h, --header <value>", "Add headers", collect, []);
 
+  program.option(
+    "-c, --scalar <value>",
+    "Define type for custom scalar",
+    collect,
+    []
+  );
+
   program.parse();
 }
 
@@ -53,7 +60,7 @@ function handleOutput(output: string | undefined): string {
     return program.error("Output path for generation was not found");
   }
 
-  const resolvedEndpoint = path.join(process.cwd(), output);
+  const resolvedEndpoint = path.resolve(path.join(process.cwd(), output));
   return resolvedEndpoint;
 }
 
@@ -64,14 +71,22 @@ async function main() {
   const schemaEndpoint = handleSchema(options.schema);
   const outputPath = handleOutput(options.output);
   const onlyTypes = options.types ?? false;
-  const headers = options.header && parseHeaders(options.header);
+  const headers = options.header && parseCustomOptions(options.header);
+  const scalars = options.scalar && parseCustomOptions(options.scalar);
 
+  console.log("");
   console.log("Resolved schema endpoint:", schemaEndpoint);
   console.log("Resolved output path:", outputPath);
   console.log("Only generate types:", onlyTypes);
+  console.log("Headers:", JSON.stringify(headers));
+  console.log("Custom scalars:", JSON.stringify(scalars));
   console.log("");
 
-  await generateSchema(schemaEndpoint, outputPath, { onlyTypes, headers });
+  await generateSchema(schemaEndpoint, outputPath, {
+    onlyTypes,
+    headers,
+    scalars,
+  });
 }
 
 main();

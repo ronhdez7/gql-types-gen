@@ -18,10 +18,12 @@ export async function generateSchema(
       )
     ).data;
     if (!data.data || data.errors) {
-      throw new Error();
+      throw new Error(JSON.stringify(data.errors, null, 2));
     }
   } catch (err) {
-    console.log(err);
+    if (err instanceof Error) {
+      console.log("Error:", err.message);
+    }
     return program.error("Could not fetch schema");
   }
 
@@ -29,7 +31,7 @@ export async function generateSchema(
 
   let contents = "";
 
-  const output = generate(schema);
+  const output = generate(schema, config.scalars);
   contents += output.types;
 
   if (!config.onlyTypes) {
