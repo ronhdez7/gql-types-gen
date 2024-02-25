@@ -65,7 +65,7 @@ async function main() {
   console.log("Only generate types:", onlyTypes);
   console.log("");
 
-  await generateSchema(schemaEndpoint, outputPath);
+  await generateSchema(schemaEndpoint, outputPath, { onlyTypes });
 }
 
 main();

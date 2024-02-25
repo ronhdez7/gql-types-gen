@@ -1,11 +1,12 @@
 import axios from "axios";
 import { GET_SCHEMA_QUERY, program, writeToFile } from "./utils";
-import { IntrospectionResponse } from "../types";
+import { GenerationConfig, IntrospectionResponse } from "../types";
 import { generate } from "./generate";
 
 export async function generateSchema(
   schemaEndpoint: string,
-  outputPath: string
+  outputPath: string,
+  config: GenerationConfig = {}
 ) {
   let data: IntrospectionResponse;
   try {
@@ -28,13 +29,13 @@ export async function generateSchema(
 
   let contents = "";
 
-  // include imports
-  contents += `import { __Schema, __Directive, __DirectiveLocation, __EnumValue, __Field, __InputValue, __Type, __TypeKind } from "gql-types-gen";\n\n`;
-
   const output = generate(schema);
   contents += output.types;
-  contents += "\n\n";
-  contents += output.objects;
+
+  if (!config.onlyTypes) {
+    contents += "\n\n";
+    contents += output.objects;
+  }
 
   writeToFile(outputPath, contents);
 }

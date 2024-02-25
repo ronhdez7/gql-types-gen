@@ -29,3 +29,7 @@ export type OptionFlags = {
   output: string;
   types?: boolean;
 };
+
+export interface GenerationConfig {
+  onlyTypes?: boolean;
+}
