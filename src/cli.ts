@@ -3,7 +3,7 @@
 import { OptionFlags } from "./types";
 import * as path from "path";
 import { generateSchema } from "./lib";
-import { program } from "./lib/utils";
+import { parseHeaders, program } from "./lib/utils";
 
 function defineProgram() {
   program
@@ -24,6 +24,11 @@ function defineProgram() {
   );
 
   program.option("-t, --types", "Only generate types");
+
+  function collect(value: string, previous: any) {
+    return previous.concat([value]);
+  }
+  program.option("-h, --header <value>", "Add headers", collect, []);
 
   program.parse();
 }
@@ -59,13 +64,14 @@ async function main() {
   const schemaEndpoint = handleSchema(options.schema);
   const outputPath = handleOutput(options.output);
   const onlyTypes = options.types ?? false;
+  const headers = options.header && parseHeaders(options.header);
 
   console.log("Resolved schema endpoint:", schemaEndpoint);
   console.log("Resolved output path:", outputPath);
   console.log("Only generate types:", onlyTypes);
   console.log("");
 
-  await generateSchema(schemaEndpoint, outputPath, { onlyTypes });
+  await generateSchema(schemaEndpoint, outputPath, { onlyTypes, headers });
 }
 
 main();

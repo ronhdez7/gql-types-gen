@@ -1,7 +1,8 @@
 import * as path from "path";
 import * as fs from "fs";
-
 import { Command } from "commander";
+import { HeadersConfig } from "../types";
+
 export const program = new Command();
 
 export function requiredType(value: string): string {
@@ -23,6 +24,17 @@ export function writeToFile(outputPath: string, content: string) {
     fs.mkdirSync(dirname, { recursive: true });
   }
   fs.writeFileSync(outputPath, content);
+}
+
+export function parseHeaders(headers: string[]): HeadersConfig {
+  const parsedHeaders: HeadersConfig = {};
+  for (const header of headers) {
+    const [name, value] = header.split(":");
+    if (name === undefined || value === undefined) continue;
+    parsedHeaders[name.trim()] = value.trim();
+  }
+
+  return parsedHeaders;
 }
 
 export const GET_SCHEMA_QUERY = `fragment FullType on __Type {
@@ -112,4 +124,6 @@ query IntrospectionQuery {
       }
     }
   }
-}`.split("\n").join(" ");
+}`
+  .split("\n")
+  .join(" ");

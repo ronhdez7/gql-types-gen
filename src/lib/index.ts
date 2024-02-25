@@ -14,7 +14,7 @@ export async function generateSchema(
       await axios.post(
         schemaEndpoint,
         { query: GET_SCHEMA_QUERY },
-        { headers: { "Content-Type": "application/json" } }
+        { headers: { "Content-Type": "application/json", ...config.headers } }
       )
     ).data;
     if (!data.data || data.errors) {
