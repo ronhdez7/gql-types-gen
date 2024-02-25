@@ -1,5 +1,6 @@
 /src
 /node_modules
+/examples
 
 .env
 .DS_Store
