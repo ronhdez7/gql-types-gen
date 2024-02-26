@@ -110,7 +110,7 @@ class Generator {
       case __TypeKind.LIST:
         {
           const output = this.handleType(type.ofType);
-          types = `${output?.types ?? "any"}[] | null`;
+          types = `(${output?.types ?? "any"})[] | null`;
           objects = `[${output?.objects ?? ""}]`;
         }
         break;
