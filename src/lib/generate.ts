@@ -49,6 +49,7 @@ class Generator {
   ) {}
 
   generate(): GenerationOutput {
+    this.types += "export type Schema = {\n";
     this.objects += "export const schema = {\n";
 
     for (const type of this.schema.types) {
@@ -56,16 +57,13 @@ class Generator {
       if (!output) continue;
 
       // types
-      if (type.kind === __TypeKind.ENUM) {
-        this.types += `export enum ${type.name} ${output.types};\n\n`;
-      } else {
-        this.types += `export type ${type.name} = ${output.types};\n\n`;
-      }
+      this.types += `${type.name}: ${output.types};\n\n`;
 
       // js
       this.objects += `${type.name}: ${output.objects},`;
     }
 
+    this.types += "}";
     this.objects += "} as const";
 
     return { types: this.types, objects: this.objects };
@@ -77,13 +75,15 @@ class Generator {
     let types: string;
     let objects: string;
 
+    const typeName = `Schema["${type.name}"]`;
+
     switch (type.kind) {
       case __TypeKind.SCALAR:
         if (define) {
           types = this.handleScalar(type);
           objects = `""`;
         } else {
-          types = `${type.name} | null`;
+          types = `${typeName} | null`;
           objects = `"${type.name}"`;
         }
         break;
@@ -94,7 +94,7 @@ class Generator {
           types = `{\n${output.types}}`;
           objects = `{\n${output.objects}}`;
         } else {
-          types = `${type.name} | null`;
+          types = `${typeName} | null`;
           objects = `"${type.name}"`;
         }
         break;
@@ -121,7 +121,7 @@ class Generator {
           types = `{\n${output.types}}`;
           objects = `{\n${output.objects}}`;
         } else {
-          types = `${type.name} | null`;
+          types = `${typeName} | null`;
           objects = `"${type.name}"`;
         }
         break;
@@ -132,7 +132,7 @@ class Generator {
           types = `{\n${output.types}}`;
           objects = `{\n${output.objects}}`;
         } else {
-          types = `${type.name} | null`;
+          types = `${typeName} | null`;
           objects = `"${type.name}"`;
         }
         break;
@@ -143,7 +143,7 @@ class Generator {
           types = output.types;
           objects = output.objects;
         } else {
-          types = type.name;
+          types = typeName;
           objects = `"${type.name}"`;
         }
         break;
@@ -196,7 +196,7 @@ class Generator {
     let objects = "";
 
     for (const e of enums) {
-      types += `${e.name} = "${e.name}",\n`;
+      types += `${e.name}: "${e.name}",\n`;
       objects += `${e.name}: "ENUM",\n`;
     }
 
