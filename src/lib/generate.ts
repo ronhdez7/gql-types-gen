@@ -133,7 +133,7 @@ class Generator {
           objects = `{\n${output.objects}}`;
         } else {
           types = `${typeName} | null`;
-          objects = `"${type.name}"`;
+          objects = `"ENUM"`;
         }
         break;
 
@@ -197,7 +197,7 @@ class Generator {
 
     for (const e of enums) {
       types += `${e.name}: "${e.name}",\n`;
-      objects += `${e.name}: "ENUM",\n`;
+      objects += `${e.name}: "${e.name}",\n`;
     }
 
     return { types, objects };
