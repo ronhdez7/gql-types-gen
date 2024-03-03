@@ -129,7 +129,7 @@ class Generator {
       case __TypeKind.ENUM:
         if (define && type.enumValues) {
           const output = this.handleEnums(type.enumValues);
-          types = `{\n${output.types}}`;
+          types = `${output.types}`;
           objects = `{\n${output.objects}}`;
         } else {
           types = `${typeName} | null`;
@@ -196,7 +196,7 @@ class Generator {
     let objects = "";
 
     for (const e of enums) {
-      types += `${e.name}: "${e.name}",\n`;
+      types += `| "${e.name}" `;
       objects += `${e.name}: "${e.name}",\n`;
     }
 
