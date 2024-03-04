@@ -39,7 +39,7 @@ class Generator {
     String: "string",
     Int: "number",
     ID: "string",
-    Boolean: "string",
+    Boolean: "boolean",
     Float: "number",
   } as Record<string, string>;
 
