@@ -130,10 +130,10 @@ class Generator {
         if (define && type.enumValues) {
           const output = this.handleEnums(type.enumValues);
           types = `${output.types}`;
-          objects = `{\n${output.objects}}`;
+          objects = `${output.objects}`;
         } else {
           types = `${typeName} | null`;
-          objects = `"ENUM"`;
+          objects = `"${type.name}"`;
         }
         break;
 
@@ -193,14 +193,12 @@ class Generator {
 
   handleEnums(enums: __EnumValue[]): GenerationOutput {
     let types = "";
-    let objects = "";
 
     for (const e of enums) {
       types += `| "${e.name}" `;
-      objects += `${e.name}: "${e.name}",\n`;
     }
 
-    return { types, objects };
+    return { types, objects: `"ENUM"` };
   }
 
   handleUnion(type: Union): GenerationOutput {

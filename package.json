@@ -1,6 +1,6 @@
 {
   "name": "gql-types-gen",
-  "version": "0.4.3",
+  "version": "0.4.6",
   "description": "A cli tool to generate types from a remote graphql schema",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
