@@ -90,7 +90,7 @@ class Generator {
 
       case __TypeKind.OBJECT:
         if (define && type.fields) {
-          const output = this.handleFields(type.fields);
+          const output = this.handleFields(type.name, type.fields);
           types = `{\n${output.types}}`;
           objects = `{\n${output.objects}}`;
         } else {
@@ -117,7 +117,7 @@ class Generator {
 
       case __TypeKind.INPUT_OBJECT:
         if (define && type.inputFields) {
-          const output = this.handleFields(type.inputFields);
+          const output = this.handleFields(type.name, type.inputFields);
           types = `{\n${output.types}}`;
           objects = `{\n${output.objects}}`;
         } else {
@@ -163,9 +163,12 @@ class Generator {
     );
   }
 
-  handleFields(fields: (__Field | __InputValue)[]): GenerationOutput {
-    let types = "";
-    let objects = "";
+  handleFields(
+    name: string,
+    fields: (__Field | __InputValue)[]
+  ): GenerationOutput {
+    let types = `__typename: "${name}",\n`;
+    let objects = `__typename: "${name}",\n`;
 
     for (const field of fields) {
       types += `${field.name}: `;
